@@ -1,4 +1,5 @@
 import scrapy
+import re
 
 
 class BBCSpider(scrapy.Spider):
@@ -10,9 +11,11 @@ class BBCSpider(scrapy.Spider):
 
     def parse(self, response):
         news = []
-        items = response.css('li.media-list__item')
+        items = response.css('li.media-list__item') 
         for item in items:
             news.append({
-                "imageUrl": item.css('.responsive-image img::attr(src)').get()
+                "image_url": item.css('.responsive-image img::attr(src)').get(),
+                "head_line": re.sub("\n", "", str(item.css('.media__link::text').get())),
+                "tag": str(item.css('.media__tag::text').get())
             })
-        print(news)
+        print(f'------------------>>{news[0]}<<-----------------')
