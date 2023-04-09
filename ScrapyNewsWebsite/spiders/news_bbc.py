@@ -1,9 +1,15 @@
 import scrapy
 import json
 
-class BBCSpider(scrapy.Spider):
-    name = "bbc"
+from scrapy.crawler import CrawlerProcess
+
+
+class NewsBBCSpider(scrapy.Spider):
+    name = "news_bbc"
     start_urls=[]
+
+    with open(f'{name}.json','w') as file:
+        pass
     
     with open('search.json', 'r') as url_list:
         url_list = json.loads(url_list.read())
@@ -23,3 +29,16 @@ class BBCSpider(scrapy.Spider):
                 "date_time":item.css('.gs-o-bullet__text::attr(datetime)').get()
             }
             yield news
+
+
+def start(name):
+    process = CrawlerProcess(settings={
+        "FEEDS": {
+            f'{name}.json': {"format": "json"},
+        },
+    })
+
+    process.crawl(NewsBBCSpider)
+    process.start()
+
+start('news_bbc')
