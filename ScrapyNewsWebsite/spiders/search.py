@@ -1,12 +1,16 @@
 import scrapy
+import os
 
 from scrapy.crawler import CrawlerProcess
 
+PATH=f'{os.getcwd()}\\ScrapyNewsWebsite\\'
+NAME='search'
+
 class SearchSpider(scrapy.Spider):
-    name="search"
+    name=NAME
     start_urls=["https://www.bbc.com/news"]
 
-    with open(f'{name}.json','w') as file:
+    with open(f'{PATH}json\\{name}.json','w') as file:
         pass
 
     def parse(self, response, **kwargs):
@@ -20,11 +24,11 @@ class SearchSpider(scrapy.Spider):
 def start(name):
     process = CrawlerProcess(settings={
         "FEEDS": {
-            f'{name}.json': {"format": "json"},
+            f'ScrapyNewsWebsite/json/{name}.json': {"format": "json", "overwrite": True},
         },
     })
 
     process.crawl(SearchSpider)
     process.start()
 
-start('search')
+start(NAME)

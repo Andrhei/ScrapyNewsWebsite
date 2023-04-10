@@ -1,17 +1,20 @@
 import scrapy
 import json
+import os
 
 from scrapy.crawler import CrawlerProcess
 
+PATH=f'{os.getcwd()}\\ScrapyNewsWebsite\\'
+NAME='news_bbc'
 
 class NewsBBCSpider(scrapy.Spider):
-    name = "news_bbc"
+    name = NAME
     start_urls=[]
 
-    with open(f'{name}.json','w') as file:
+    with open(f'{PATH}json\\{name}.json','w') as file:
         pass
     
-    with open('search.json', 'r') as url_list:
+    with open(f'{PATH}json\\search.json', 'r') as url_list:
         url_list = json.loads(url_list.read())
     for element in url_list:
         start_urls.append(element['url'])
@@ -34,11 +37,11 @@ class NewsBBCSpider(scrapy.Spider):
 def start(name):
     process = CrawlerProcess(settings={
         "FEEDS": {
-            f'{name}.json': {"format": "json"},
+            f'ScrapyNewsWebsite/json/{name}.json': {"format": "json", "overwrite": True},
         },
     })
 
     process.crawl(NewsBBCSpider)
     process.start()
 
-start('news_bbc')
+start(NAME)
